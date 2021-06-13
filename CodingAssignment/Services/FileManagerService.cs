@@ -26,13 +26,25 @@ namespace CodingAssignment.Services
 
         public bool Insert(DataModel model)
         {
-            _data.Data.Add(model);
 
-            if (WriteToFile())
+            DataModel dm = _data.Data.FirstOrDefault(x => x.Id == model.Id);
+
+            if (dm != null || String.IsNullOrEmpty(model.Id.ToString()))
             {
-                _data = ReadFromFile();
-                return true;
+                throw new Exception("An item with the same id already exists");
+
+            } else
+            {
+                _data.Data.Add(model);
+
+                if (WriteToFile())
+                {
+                    _data = ReadFromFile();
+                    return true;
+                }
+
             }
+
 
             return false;
         }
@@ -42,7 +54,7 @@ namespace CodingAssignment.Services
 
             if(id != model.Id)
             {
-                return false;
+                throw new Exception();
             }
 
             DataModel tDataModel = _data.Data.FirstOrDefault(x => x.Id == id);
