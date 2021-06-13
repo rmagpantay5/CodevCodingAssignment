@@ -29,22 +29,30 @@ namespace CodingAssignment.Services
 
             DataModel dm = _data.Data.FirstOrDefault(x => x.Id == model.Id);
 
-            if (dm != null || String.IsNullOrEmpty(model.Id.ToString()))
+            try
             {
-                throw new Exception("An item with the same id already exists");
-
-            } else
-            {
-                _data.Data.Add(model);
-
-                if (WriteToFile())
+                if (dm != null || String.IsNullOrEmpty(model.Id.ToString()))
                 {
-                    _data = ReadFromFile();
-                    return true;
+                    throw new Exception("An item with the same id already exists");
+
                 }
+                else
+                {
+                    _data.Data.Add(model);
 
+                    if (WriteToFile())
+                    {
+                        _data = ReadFromFile();
+                        return true;
+                    }
+
+                }
             }
+            catch (Exception)
+            {
+                throw;
 
+            } 
 
             return false;
         }
